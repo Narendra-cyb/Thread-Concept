@@ -1,5 +1,4 @@
-markdown
-Copy code
+
 # Memory Visibility Issues in Multi-Threaded Java Programs
 
 ## Problem Overview
@@ -48,18 +47,26 @@ public class VolatilePractise {
         }).start();
     }
 }
-Issues
-Memory Visibility
-Thread1 updates the flag variable by calling sharedResource.setFlag(true).
-Thread2 checks the value of flag in a busy-wait loop with sharedResource.isFlag().
-Without proper synchronization or the volatile keyword, Thread2 might not immediately see the updated value of flag set by Thread1 because the update might still be in Thread1's local CPU cache.
-Caching
-CPUs use caching to improve performance. Threads may cache variables locally, and updates made by one thread might not be visible to others immediately without proper visibility mechanisms.
-Solutions
-Using volatile Keyword
-Mark the flag variable as volatile to ensure visibility across threads. Changes to a volatile variable are immediately visible to all threads.
-java
-Copy code
+```
+## Issues
+
+### Memory Visibility
+
+- `Thread1` updates the `flag` variable by calling `sharedResource.setFlag(true)`.
+- `Thread2` checks the value of `flag` in a busy-wait loop with `sharedResource.isFlag()`.
+- Without proper synchronization or the `volatile` keyword, `Thread2` might not immediately see the updated value of `flag` set by `Thread1` because the update might still be in `Thread1`'s local CPU cache.
+
+### Caching
+
+- CPUs use caching to improve performance. Threads may cache variables locally, and updates made by one thread might not be visible to others immediately without proper visibility mechanisms.
+
+## Solutions
+
+### Using `volatile` Keyword
+
+- Mark the `flag` variable as `volatile` to ensure visibility across threads. Changes to a `volatile` variable are immediately visible to all threads.
+
+```java
 class SharedResource {
     private volatile boolean flag = false;
 
@@ -71,10 +78,12 @@ class SharedResource {
         this.flag = flag;
     }
 }
-Using Synchronized Methods
-Use synchronized blocks or methods to ensure atomicity and visibility.
-java
-Copy code
+```
+### Using Synchronized Methods
+
+- Use synchronized blocks or methods to ensure atomicity and visibility.
+
+```java
 class SharedResource {
     private boolean flag = false;
 
@@ -86,10 +95,13 @@ class SharedResource {
         this.flag = flag;
     }
 }
-Using Atomic Variables
-For atomic updates, use classes from java.util.concurrent.atomic, such as AtomicBoolean.
-java
-Copy code
+```
+
+### Using Atomic Variables
+
+- For atomic updates, use classes from `java.util.concurrent.atomic`, such as `AtomicBoolean`.
+
+```java
 import java.util.concurrent.atomic.AtomicBoolean;
 
 class SharedResource {
@@ -103,9 +115,13 @@ class SharedResource {
         this.flag.set(flag);
     }
 }
-Summary
+```
+## Summary
+
 To ensure proper memory visibility and synchronization across threads in Java:
 
-Use the volatile keyword for simple scenarios.
-Use synchronized methods or blocks for ensuring atomicity and visibility.
-Consider atomic variables from java.util.concurrent.atomic for more complex scenarios.
+- Use the `volatile` keyword for simple scenarios.
+- Use synchronized methods or blocks for ensuring atomicity and visibility.
+- Consider atomic variables from `java.util.concurrent.atomic` for more complex scenarios.
+
+By implementing these strategies, you can avoid common pitfalls related to memory visibility and synchronization in multi-threaded applications.
